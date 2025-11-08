@@ -1,3 +1,4 @@
+import { useState } from "react";
 import "./App.css";
 
 const listItems = [
@@ -44,6 +45,8 @@ function Logo() {
 }
 
 function Form() {
+  const [title, setTitle] = useState("");
+
   function handleSubmit(e: any) {
     // ini untk contoh penggunaan any
     e.preventDefault();
@@ -53,7 +56,16 @@ function Form() {
   return (
     <form className="add-form" onSubmit={handleSubmit}>
       <h3>Add a ToDo</h3>
-      <input type="text" name="title" id="" />
+      <input
+        type="text"
+        name="title"
+        id=""
+        value={title}
+        onChange={(e) => {
+          console.log(e);
+          setTitle(e.target.value);
+        }}
+      />
       <button>Add</button>
     </form>
   );
