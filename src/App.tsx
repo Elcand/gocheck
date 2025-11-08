@@ -44,10 +44,18 @@ function Logo() {
 }
 
 function Form() {
+  function handleSubmit(e: any) {
+    // ini untk contoh penggunaan any
+    e.preventDefault();
+    console.log("refresh manual");
+  }
+
   return (
-    <div className="add-form">
+    <form className="add-form" onSubmit={handleSubmit}>
       <h3>Add a ToDo</h3>
-    </div>
+      <input type="text" name="title" id="" />
+      <button>Add</button>
+    </form>
   );
 }
 
