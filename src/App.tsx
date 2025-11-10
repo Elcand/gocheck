@@ -1,40 +1,25 @@
 import { useState } from "react";
 import "./App.css";
 
-const listItems = [
-  {
-    id: 1,
-    title: "Makan",
-    done: false,
-  },
-  {
-    id: 2,
-    title: "Minum",
-    done: false,
-  },
-  {
-    id: 3,
-    title: "Tidur",
-    done: true,
-  },
-  {
-    id: 4,
-    title: "Ngobrol",
-    done: false,
-  },
-  {
-    id: 5,
-    title: "Nonton",
-    done: false,
-  },
-];
+type TodoItem = {
+  // ini untk pengganti 'any' di ts, kalo js ga perlu
+  id: number;
+  title: string;
+  done: boolean;
+};
 
 function App() {
+  const [listItems, setListItems] = useState<TodoItem[]>([]);
+
+  function handleAddItem(item: TodoItem) {
+    setListItems((listItems) => [...listItems, item]);
+  }
+
   return (
     <div className="app">
       <Logo />
-      <Form />
-      <Checklist />
+      <Form onAddItem={handleAddItem} />
+      <Checklist items={listItems} />
       <Stats />
     </div>
   );
@@ -44,13 +29,25 @@ function Logo() {
   return <span className="logo">🤞 GoCheck</span>;
 }
 
-function Form() {
+function Form({ onAddItem }: { onAddItem: (item: TodoItem) => void }) {
   const [title, setTitle] = useState("");
 
   function handleSubmit(e: any) {
     // ini untk contoh penggunaan any
     e.preventDefault();
-    console.log("refresh manual");
+
+    if (!title) return;
+
+    const newItem = {
+      id: Date.now(),
+      title,
+      done: false,
+    };
+
+    onAddItem(newItem);
+    setTitle("");
+
+    console.log(e);
   }
 
   return (
@@ -71,24 +68,17 @@ function Form() {
   );
 }
 
-function Checklist() {
+function Checklist({ items }: { items: TodoItem[] }) {
   return (
     <div className="list">
       <ul>
-        {listItems.map((item) => (
+        {items.map((item) => (
           <Item key={item.id} item={item} />
         ))}
       </ul>
     </div>
   );
 }
-
-type TodoItem = {
-  // ini untk pengganti 'any' di ts, kalo js ga perlu
-  id: number;
-  title: string;
-  done: boolean;
-};
 
 function Item({ item }: { item: TodoItem }) {
   return (
@@ -105,7 +95,7 @@ function Item({ item }: { item: TodoItem }) {
 function Stats() {
   return (
     <footer className="stats">
-      <span># You have x notes & only x have been checked off (x%) </span>
+      <span>✅ You have x notes & only x have been checked off (x%) </span>
     </footer>
   );
 }
