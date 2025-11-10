@@ -15,11 +15,27 @@ function App() {
     setListItems((listItems) => [...listItems, item]);
   }
 
+  function handleDeleteItem(id: TodoItem["id"]) {
+    setListItems((listItems) => listItems.filter((item) => item.id !== id));
+  }
+
+  function handleToggleItem(id: TodoItem["id"]) {
+    setListItems((listItems) =>
+      listItems.map((item) =>
+        item.id === id ? { ...item, done: !item.done } : item
+      )
+    );
+  }
+
   return (
     <div className="app">
       <Logo />
       <Form onAddItem={handleAddItem} />
-      <Checklist items={listItems} />
+      <Checklist
+        items={listItems}
+        onDeleteItem={handleDeleteItem}
+        onToggleItem={handleToggleItem}
+      />
       <Stats />
     </div>
   );
@@ -68,26 +84,35 @@ function Form({ onAddItem }: { onAddItem: (item: TodoItem) => void }) {
   );
 }
 
-function Checklist({ items }: { items: TodoItem[] }) {
+function Checklist({ items, onDeleteItem, onToggleItem }: any) {
   return (
     <div className="list">
       <ul>
-        {items.map((item) => (
-          <Item key={item.id} item={item} />
+        {items.map((item: any) => (
+          <Item
+            key={item.id}
+            item={item}
+            onDeleteItem={onDeleteItem}
+            onToggleItem={onToggleItem}
+          />
         ))}
       </ul>
     </div>
   );
 }
 
-function Item({ item }: { item: TodoItem }) {
+function Item({ item, onDeleteItem, onToggleItem }: any) {
   return (
     <li>
-      <input type="checkbox" />
-      <span style={{ textDecoration: item.done ? "line-through" : "none" }}>
+      <input
+        type="checkbox"
+        checked={item.done}
+        onChange={() => onToggleItem(item.id)}
+      />
+      <span style={{ textDecoration: item.done ? "line-through" : "" }}>
         {item.title}
       </span>
-      <button>❌</button>
+      <button onClick={() => onDeleteItem(item.id)}>❌</button>
     </li>
   );
 }
