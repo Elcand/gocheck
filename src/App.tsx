@@ -27,6 +27,15 @@ function App() {
     );
   }
 
+  function handleClearitems() {
+    const confirmed = window.confirm(
+      "Are you sure you want to clear this list?"
+    );
+    if (confirmed) {
+      setListItems([]);
+    }
+  }
+
   return (
     <div className="app">
       <Logo />
@@ -35,6 +44,7 @@ function App() {
         items={listItems}
         onDeleteItem={handleDeleteItem}
         onToggleItem={handleToggleItem}
+        onClearItems={handleClearitems}
       />
       <Stats items={listItems} />
     </div>
@@ -84,7 +94,7 @@ function Form({ onAddItem }: { onAddItem: (item: TodoItem) => void }) {
   );
 }
 
-function Checklist({ items, onDeleteItem, onToggleItem }: any) {
+function Checklist({ items, onDeleteItem, onToggleItem, onClearItems }: any) {
   const [sortBy, setSortBy] = useState("input");
 
   function sortItems() {
@@ -123,6 +133,7 @@ function Checklist({ items, onDeleteItem, onToggleItem }: any) {
           <option value="title">Urutkan berdasarkan judul</option>
           <option value="status">Urutkan berdasarkan status</option>
         </select>
+        <button onClick={onClearItems}>Clear</button>
       </div>
     </div>
   );
